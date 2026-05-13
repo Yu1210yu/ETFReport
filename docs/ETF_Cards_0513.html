@@ -13,6 +13,32 @@ body {
     padding: 0 0 40px 0;
 }
 
+/* ── 導覽列 ── */
+.nav-bar {
+    display: flex;
+    background: #0d1117;
+    border-bottom: 1px solid #30363d;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.nav-item {
+    flex: 1;
+    min-width: 80px;
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 12px;
+    color: #8b949e;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+}
+.nav-item.active {
+    color: #f0c040;
+    border-bottom-color: #f0c040;
+    font-weight: 700;
+}
+.nav-item:hover { color: #e6edf3; }
+
 /* ── 頂部標題 ── */
 .header {
     background: linear-gradient(135deg, #161b22, #1c2128);
@@ -176,6 +202,12 @@ td:nth-child(1) { padding: 6px 4px; }
   <h1>主動ETF 籌碼異動速報</h1>
   <div class="subtitle">2026/05/13</div>
   <div class="stats">共 90 檔有異動</div>
+</div>
+
+<div class="nav-bar">
+  <a class="nav-item active" href="ETF_Cards_0513.html">📋 今日異動</a>
+  <a class="nav-item" href="ETF_Sync_0513.html">🔍 同步加碼</a>
+  <a class="nav-item" href="ETF_Broker_0513.html">📍 權證分點</a>
 </div>
 
 <div class="etf-card">
@@ -963,7 +995,7 @@ td:nth-child(1) { padding: 6px 4px; }
 
 <div class="footer">
   資料僅供參考，不構成投資建議<br>
-  產生時間：2026/05/13 20:14
+  產生時間：2026/05/13 20:25
 </div>
 
 </body>
