@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ETF 標的權證分點追蹤 2026/06/02</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background: #0d1117; color: #e6edf3;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    padding-bottom: 40px;
+}
+.header {
+    background: linear-gradient(135deg, #161b22, #1c2128);
+    padding: 20px 16px 16px; text-align: center;
+    border-bottom: 1px solid #30363d;
+    position: sticky; top: 0; z-index: 100;
+}
+.header h1 { font-size: 18px; font-weight: 700; color: #f0f6fc; }
+.header .subtitle { font-size: 12px; color: #8b949e; margin-top: 4px; }
+/* ── 導覽列 ── */
+.nav-bar {
+    display: flex;
+    background: #0d1117;
+    border-bottom: 1px solid #30363d;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.nav-item {
+    flex: 1;
+    min-width: 80px;
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 12px;
+    color: #8b949e;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+}
+.nav-item.active {
+    color: #f0c040;
+    border-bottom-color: #f0c040;
+    font-weight: 700;
+}
+.nav-item:hover { color: #e6edf3; }
+
+.stock-card {
+    margin: 12px 12px 0; background: #161b22;
+    border-radius: 10px; overflow: hidden; border: 1px solid #21262d;
+}
+.stock-header {
+    padding: 10px 14px; background: #1c2128;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.stock-left { display: flex; flex-direction: column; gap: 4px; }
+.stock-code { font-size: 16px; font-weight: 700; color: #f0f6fc; }
+.stock-name { font-size: 12px; color: #8b949e; }
+.stock-etfs { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 2px; }
+.etf-tag {
+    background: #0f3460; color: #f0c040;
+    font-size: 10px; font-weight: 700;
+    padding: 2px 6px; border-radius: 4px;
+}
+.stock-right { text-align: right; }
+.stock-price { font-size: 16px; font-weight: 700; color: #f0f6fc; }
+.stock-change { font-size: 12px; color: #e94560; margin-top: 2px; }
+.date-section {
+    padding: 6px 14px; background: #0d1117;
+    font-size: 11px; color: #8b949e;
+    border-top: 1px solid #21262d;
+}
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead tr { background: #1c2128; }
+thead th {
+    padding: 7px 10px; color: #8b949e;
+    font-size: 11px; font-weight: 500;
+    text-align: right; white-space: nowrap;
+}
+thead th:first-child { text-align: left; }
+tbody tr { border-top: 1px solid #21262d; }
+tbody tr:nth-child(even) { background: #0d1117; }
+td { padding: 8px 10px; text-align: right; white-space: nowrap; }
+td:first-child { text-align: left; color: #f0f6fc; font-weight: 600; }
+.amount-cell { display: flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.bar-bg { width: 50px; background: #21262d; border-radius: 3px; height: 5px; flex-shrink: 0; }
+.bar-fill { height: 5px; border-radius: 3px; background: #e94560; }
+.amount-val { color: #e94560; font-weight: 700; min-width: 55px; text-align: right; font-size: 12px; }
+.no-data { text-align: center; padding: 30px; color: #8b949e; font-size: 13px; }
+.footer { text-align: center; padding: 24px 16px 8px; color: #484f58; font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🎯 ETF 標的權證分點追蹤</h1>
+  <div class="subtitle">2026/06/02 · 金額門檻：100 萬 · 近3交易日</div>
+</div>
+
+<div class="nav-bar">
+  <a class="nav-item" href="ETF_Cards_0602.html">📋 今日異動</a>
+  <a class="nav-item" href="ETF_Sync_0602.html">🔍 同步加碼</a>
+  <a class="nav-item active" href="ETF_Broker_0602.html">📍 權證分點</a>
+</div>
+
+<div class="stock-card">
+  <div class="stock-header">
+    <div class="stock-left">
+      <div class="stock-code">2317</div>
+      <div class="stock-name">鴻海</div>
+      <div class="stock-etfs"><span class="etf-tag">00403A</span></div>
+    </div>
+    <div class="stock-right">
+      <div class="stock-price">297.5</div>
+      <div class="stock-change">新增</div>
+    </div>
+  </div>
+
+  <div class="date-section">📅 2026-06-01</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>分點名稱</th><th>買超(張)</th><th>買超金額</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>台新證券</td>
+          <td>8,491</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div>
+              <span class="amount-val">4196.1萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>國票綜合</td>
+          <td>5,503</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:38%"></div></div>
+              <span class="amount-val">1605.2萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>兆豐</td>
+          <td>2,942</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:28%"></div></div>
+              <span class="amount-val">1159.7萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>元大</td>
+          <td>3,616</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:20%"></div></div>
+              <span class="amount-val">852.4萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>群益</td>
+          <td>71</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:12%"></div></div>
+              <span class="amount-val">499.8萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>中國信託</td>
+          <td>3,956</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:11%"></div></div>
+              <span class="amount-val">475.4萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>元大西屯</td>
+          <td>993</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:4%"></div></div>
+              <span class="amount-val">160.8萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>元大向上</td>
+          <td>994</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:4%"></div></div>
+              <span class="amount-val">160.5萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>富邦</td>
+          <td>73</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:4%"></div></div>
+              <span class="amount-val">157.0萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>元大大雅</td>
+          <td>1,033</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:4%"></div></div>
+              <span class="amount-val">152.0萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>國泰敦南</td>
+          <td>1,629</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:3%"></div></div>
+              <span class="amount-val">116.3萬</span>
+            </div>
+          </td>
+        </tr></tbody>
+    </table>
+  </div>
+  <div class="date-section">📅 2026-05-29</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>分點名稱</th><th>買超(張)</th><th>買超金額</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>國票綜合</td>
+          <td>3,984</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div>
+              <span class="amount-val">2273.4萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>兆豐中港</td>
+          <td>3,611</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:41%"></div></div>
+              <span class="amount-val">938.7萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>中國信託</td>
+          <td>4,897</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:28%"></div></div>
+              <span class="amount-val">645.1萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>台新台北</td>
+          <td>2,703</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:24%"></div></div>
+              <span class="amount-val">535.6萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>元大樹林</td>
+          <td>711</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:21%"></div></div>
+              <span class="amount-val">467.9萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>元大西螺</td>
+          <td>2,372</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:20%"></div></div>
+              <span class="amount-val">444.2萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>華南岡山</td>
+          <td>981</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:18%"></div></div>
+              <span class="amount-val">416.3萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>永豐金</td>
+          <td>1,587</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:15%"></div></div>
+              <span class="amount-val">337.0萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>群益</td>
+          <td>1,087</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:12%"></div></div>
+              <span class="amount-val">283.4萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>富邦</td>
+          <td>3,052</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:12%"></div></div>
+              <span class="amount-val">263.0萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>新光新竹</td>
+          <td>267</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:11%"></div></div>
+              <span class="amount-val">261.4萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>元大向上</td>
+          <td>1,772</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:10%"></div></div>
+              <span class="amount-val">230.4萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>玉山</td>
+          <td>585</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:8%"></div></div>
+              <span class="amount-val">190.7萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>元大北港</td>
+          <td>530</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:6%"></div></div>
+              <span class="amount-val">139.0萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>元大潮州</td>
+          <td>484</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:6%"></div></div>
+              <span class="amount-val">137.8萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>永豐敦北</td>
+          <td>426</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:6%"></div></div>
+              <span class="amount-val">128.4萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>元大大同</td>
+          <td>756</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:5%"></div></div>
+              <span class="amount-val">123.8萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>中信嘉義</td>
+          <td>273</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:5%"></div></div>
+              <span class="amount-val">122.8萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>台新吉利</td>
+          <td>554</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:5%"></div></div>
+              <span class="amount-val">119.6萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>凱基台北</td>
+          <td>1,316</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:5%"></div></div>
+              <span class="amount-val">118.4萬</span>
+            </div>
+          </td>
+        </tr></tbody>
+    </table>
+  </div>
+  <div class="date-section">📅 2026-05-28</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>分點名稱</th><th>買超(張)</th><th>買超金額</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>凱基</td>
+          <td>4,719</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div>
+              <span class="amount-val">1032.2萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>元大</td>
+          <td>4,612</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:39%"></div></div>
+              <span class="amount-val">397.5萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>台企建成</td>
+          <td>2,623</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:16%"></div></div>
+              <span class="amount-val">161.6萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>群益</td>
+          <td>392</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:15%"></div></div>
+              <span class="amount-val">157.2萬</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>國票綜合</td>
+          <td>274</td>
+          <td>
+            <div class="amount-cell">
+              <div class="bar-bg"><div class="bar-fill" style="width:11%"></div></div>
+              <span class="amount-val">117.6萬</span>
+            </div>
+          </td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="footer">資料僅供參考，不構成投資建議<br>產生時間：2026/06/02</div>
+</body></html>
