@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>主動ETF 籌碼異動速報 2026/07/14</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background: #0d1117;
+    color: #e6edf3;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    padding: 0 0 40px 0;
+}
+
+/* ── 導覽列 ── */
+.nav-bar {
+    display: flex;
+    background: #0d1117;
+    border-bottom: 1px solid #30363d;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.nav-item {
+    flex: 1;
+    min-width: 80px;
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 12px;
+    color: #8b949e;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+}
+.nav-item.active {
+    color: #f0c040;
+    border-bottom-color: #f0c040;
+    font-weight: 700;
+}
+.nav-item:hover { color: #e6edf3; }
+
+/* ── 頂部標題 ── */
+.header {
+    background: linear-gradient(135deg, #161b22, #1c2128);
+    padding: 20px 16px 16px;
+    text-align: center;
+    border-bottom: 1px solid #30363d;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.header h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f0f6fc;
+    letter-spacing: 1px;
+}
+.header .subtitle {
+    font-size: 13px;
+    color: #8b949e;
+    margin-top: 4px;
+}
+.header .stats {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #f0c040;
+}
+
+/* ── ETF 卡片 ── */
+.etf-card {
+    margin: 16px 12px 0;
+    background: #161b22;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #21262d;
+}
+.etf-header {
+    background: #0f3460;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.etf-badge {
+    background: #f0c040;
+    color: #0d1117;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+.etf-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #f0f6fc;
+}
+.etf-summary {
+    font-size: 11px;
+    color: #8b949e;
+    padding: 6px 14px;
+    background: #0d1117;
+    border-bottom: 1px solid #21262d;
+}
+
+/* ── 表格 ── */
+.table-wrap { overflow-x: auto; }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+thead tr {
+    background: #1c2128;
+}
+thead th {
+    padding: 8px 6px;
+    color: #8b949e;
+    font-weight: 500;
+    font-size: 11px;
+    text-align: center;
+    white-space: nowrap;
+}
+thead th:nth-child(2) { text-align: left; padding-left: 8px; }
+
+/* ── 固定第一欄（代號+股名合併）── */
+th:nth-child(1), td:nth-child(1) {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: inherit;
+    box-shadow: 2px 0 4px rgba(0,0,0,0.3);
+    min-width: 90px;
+    max-width: 90px;
+    text-align: left !important;
+}
+thead th:nth-child(1) {
+    z-index: 3;
+    background: #1c2128;
+}
+.cell-stock { display: flex; flex-direction: column; gap: 2px; padding-left: 4px; }
+.cell-code { color: #8b949e; font-size: 11px; display: flex; align-items: center; }
+.cell-name { color: #f0f6fc; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 78px; }
+tbody tr { border-bottom: 1px solid #21262d; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:nth-child(even) { background: #0d1117; }
+tbody tr:nth-child(odd) { background: #161b22; }
+td {
+    padding: 9px 6px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+td:nth-child(1) { padding: 6px 4px; }
+
+/* ── 圓點 + 異動文字 ── */
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+.dot-green { background: #2ecc71; }
+.dot-gray  { background: #666; }
+.dot-red   { background: #e94560; }
+.dot-blue  { background: #4db8ff; }
+
+.action-added   { color: #2ecc71; font-weight: 700; }
+.action-removed { color: #888; }
+.action-inc     { color: #e94560; font-weight: 700; }
+.action-dec     { color: #4db8ff; font-weight: 700; }
+
+/* ── 排名箭頭 ── */
+.rank-up   { color: #e94560; font-size: 11px; font-weight: 700; }
+.rank-down { color: #4db8ff; font-size: 11px; font-weight: 700; }
+.rank-flat { color: #8b949e; font-size: 11px; }
+.rank-new  { color: #f0c040; font-size: 10px; font-weight: 700; }
+
+/* ── 價格漲跌 ── */
+.price-up   { color: #e94560; }
+.price-down { color: #4db8ff; }
+.price-flat { color: #8b949e; }
+
+/* ── 無異動 ── */
+.no-change {
+    text-align: center;
+    padding: 20px;
+    color: #8b949e;
+    font-size: 13px;
+}
+.no-change.pending {
+    color: #f0c040;
+}
+
+/* ── Footer ── */
+.footer {
+    text-align: center;
+    padding: 24px 16px 8px;
+    color: #484f58;
+    font-size: 11px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>主動ETF 籌碼異動速報</h1>
+  <div class="subtitle">2026/07/14</div>
+  <div class="stats">共 48 檔有異動</div>
+</div>
+
+<div class="nav-bar">
+  <a class="nav-item active" href="ETF_Cards_0714.html">📋 今日異動</a>
+  <a class="nav-item" href="ETF_Sync_0714.html">🔍 同步加碼</a>
+  <a class="nav-item" href="ETF_Broker_0714.html">📍 權證分點</a>
+</div>
+
+<div class="etf-card">
+  <div class="etf-header">
+    <span class="etf-badge">00981A</span>
+    <span class="etf-name">統一台股增長</span>
+  </div>
+  <div class="etf-summary">資料日期：115/07/14　增碼 3　減碼 1</div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>股票</th>
+        <th>買賣超(張)</th>
+        <th>持股(張)</th>
+        <th>收盤價</th>
+        <th>比重%</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>8046</div><div class="cell-name">南電</div></div></td>
+        <td><span class="action-inc">增 +288</span></td>
+        <td>9,519</td>
+        <td>-</td>
+        <td>4.36%→4.65% <span class='rank-up'>↑1</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>3711</div><div class="cell-name">日月光投控</div></div></td>
+        <td><span class="action-inc">增 +145</span></td>
+        <td>15,284</td>
+        <td>-</td>
+        <td>3.77%→3.71% <span class='rank-flat'>—</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>2308</div><div class="cell-name">台達電</div></div></td>
+        <td><span class="action-inc">增 +129</span></td>
+        <td>5,181</td>
+        <td>-</td>
+        <td>3.55%→3.64% <span class='rank-flat'>—</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-blue"></span>6510</div><div class="cell-name">精測</div></div></td>
+        <td><span class="action-dec">減 -62</span></td>
+        <td>349</td>
+        <td>2,700.0</td>
+        <td>0.42%→0.36% <span class='rank-down'>↓1</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="etf-card">
+  <div class="etf-header">
+    <span class="etf-badge">00982A</span>
+    <span class="etf-name">群益台灣精選強棒</span>
+  </div>
+  <div class="etf-summary">資料日期：2026/07/14　增碼 1</div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>股票</th>
+        <th>買賣超(張)</th>
+        <th>持股(張)</th>
+        <th>收盤價</th>
+        <th>比重%</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>2351</div><div class="cell-name">順德</div></div></td>
+        <td><span class="action-inc">增 +800</span></td>
+        <td>1,700</td>
+        <td>-</td>
+        <td>0.35%→0.70% <span class='rank-up'>↑2</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="etf-card">
+  <div class="etf-header">
+    <span class="etf-badge">00987A</span>
+    <span class="etf-name">台新臺灣智能車供應鏈</span>
+  </div>
+  <div class="etf-summary">資料日期：2026/07/14　新增 1　增碼 1</div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>股票</th>
+        <th>買賣超(張)</th>
+        <th>持股(張)</th>
+        <th>收盤價</th>
+        <th>比重%</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-green"></span>8046</div><div class="cell-name">南電</div></div></td>
+        <td><span class="action-added">新增 +21</span></td>
+        <td>21</td>
+        <td>-</td>
+        <td>1.00% <span class='rank-new'>NEW</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>2408</div><div class="cell-name">南亞科</div></div></td>
+        <td><span class="action-inc">增 +79</span></td>
+        <td>240</td>
+        <td>-</td>
+        <td>2.57%→3.81% <span class='rank-up'>↑6</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="etf-card">
+  <div class="etf-header">
+    <span class="etf-badge">00992A</span>
+    <span class="etf-name">群益科技創新</span>
+  </div>
+  <div class="etf-summary">資料日期：2026/07/14　新增 1　減碼 4</div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>股票</th>
+        <th>買賣超(張)</th>
+        <th>持股(張)</th>
+        <th>收盤價</th>
+        <th>比重%</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-green"></span>3026</div><div class="cell-name">禾伸堂</div></div></td>
+        <td><span class="action-added">新增 +459</span></td>
+        <td>459</td>
+        <td>-</td>
+        <td>0.93% <span class='rank-new'>NEW</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-blue"></span>7751</div><div class="cell-name">竑騰</div></div></td>
+        <td><span class="action-dec">減 -4</span></td>
+        <td>368</td>
+        <td>1,135.0</td>
+        <td>1.15%→1.04% <span class='rank-down'>↓1</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-blue"></span>3443</div><div class="cell-name">創意</div></div></td>
+        <td><span class="action-dec">減 -100</span></td>
+        <td>211</td>
+        <td>-</td>
+        <td>3.23%→2.10% <span class='rank-down'>↓5</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-blue"></span>6515</div><div class="cell-name">穎崴</div></div></td>
+        <td><span class="action-dec">減 -21</span></td>
+        <td>99</td>
+        <td>-</td>
+        <td>2.23%→1.73% <span class='rank-down'>↓4</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-blue"></span>3017</div><div class="cell-name">奇鋐</div></div></td>
+        <td><span class="action-dec">減 -7</span></td>
+        <td>1,002</td>
+        <td>-</td>
+        <td>5.67%→5.27% <span class='rank-flat'>—</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="etf-card">
+  <div class="etf-header">
+    <span class="etf-badge">00985A</span>
+    <span class="etf-name">野村臺灣新科技50</span>
+  </div>
+  <div class="etf-summary">資料日期：2026/07/14　今日無異動</div>
+<div class="no-change">✅ 今日持股無異動</div>
+</div>
+
+<div class="etf-card">
+  <div class="etf-header">
+    <span class="etf-badge">00980A</span>
+    <span class="etf-name">野村臺灣運籌龍頭</span>
+  </div>
+  <div class="etf-summary">資料日期：2026/07/14　今日無異動</div>
+<div class="no-change">✅ 今日持股無異動</div>
+</div>
+
+<div class="etf-card">
+  <div class="etf-header">
+    <span class="etf-badge">00403A</span>
+    <span class="etf-name">統一台股升級50</span>
+  </div>
+  <div class="etf-summary">資料日期：115/07/14　新增 1　刪除 1　增碼 4</div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>股票</th>
+        <th>買賣超(張)</th>
+        <th>持股(張)</th>
+        <th>收盤價</th>
+        <th>比重%</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-green"></span>3008</div><div class="cell-name">大立光</div></div></td>
+        <td><span class="action-added">新增 +30</span></td>
+        <td>30</td>
+        <td>-</td>
+        <td>0.08% <span class='rank-new'>NEW</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-gray"></span>4979</div><div class="cell-name">華星光</div></div></td>
+        <td><span class="action-removed">刪除 -1</span></td>
+        <td>1</td>
+        <td>-</td>
+        <td>0.00% <span class='rank-new'>NEW</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>5274</div><div class="cell-name">信驊</div></div></td>
+        <td><span class="action-inc">增 +15</span></td>
+        <td>64</td>
+        <td>12,985.0</td>
+        <td>0.42%→0.52% <span class='rank-up'>↑7</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>6488</div><div class="cell-name">環球晶</div></div></td>
+        <td><span class="action-inc">增 +98</span></td>
+        <td>2,250</td>
+        <td>1,515.0</td>
+        <td>1.99%→2.14% <span class='rank-flat'>—</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>1303</div><div class="cell-name">南亞</div></div></td>
+        <td><span class="action-inc">增 +500</span></td>
+        <td>9,000</td>
+        <td>-</td>
+        <td>1.05%→1.18% <span class='rank-up'>↑1</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>8046</div><div class="cell-name">南電</div></div></td>
+        <td><span class="action-inc">增 +110</span></td>
+        <td>1,550</td>
+        <td>-</td>
+        <td>1.14%→1.25% <span class='rank-up'>↑3</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="etf-card">
+  <div class="etf-header">
+    <span class="etf-badge">00991A</span>
+    <span class="etf-name">復華台灣未來50</span>
+  </div>
+  <div class="etf-summary">資料日期：尚未更新　⏳ 尚未更新</div>
+<div class="no-change pending">⏳ 資料尚未更新，請稍後再查看</div>
+</div>
+
+<div class="etf-card">
+  <div class="etf-header">
+    <span class="etf-badge">00988A</span>
+    <span class="etf-name">統一全球創新</span>
+  </div>
+  <div class="etf-summary">資料日期：115/07/13　新增 3　刪除 2　增碼 11　減碼 2</div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>股票</th>
+        <th>買賣超(張)</th>
+        <th>持股(張)</th>
+        <th>收盤價</th>
+        <th>比重%</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-green"></span>FTNT US</div><div class="cell-name">FORTINET INC</div></div></td>
+        <td><span class="action-added">新增 +160</span></td>
+        <td>160</td>
+        <td>-</td>
+        <td>1.38% <span class='rank-new'>NEW</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-green"></span>NOW US</div><div class="cell-name">SERVICENOW INC</div></div></td>
+        <td><span class="action-added">新增 +150</span></td>
+        <td>150</td>
+        <td>-</td>
+        <td>0.90% <span class='rank-new'>NEW</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-green"></span>VECO US</div><div class="cell-name">VEECO INSTRUMENTS INC</div></div></td>
+        <td><span class="action-added">新增 +200</span></td>
+        <td>200</td>
+        <td>-</td>
+        <td>0.60% <span class='rank-new'>NEW</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-gray"></span>005930 KS</div><div class="cell-name">samsung electronics co ltd(005930 KS)</div></div></td>
+        <td><span class="action-removed">刪除 -200</span></td>
+        <td>200</td>
+        <td>-</td>
+        <td>1.91%→0.00% <span class='rank-new'>NEW</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-gray"></span>688146 CH</div><div class="cell-name">PERIC SPECIAL GASES CO LTD-A</div></div></td>
+        <td><span class="action-removed">刪除 -240</span></td>
+        <td>240</td>
+        <td>-</td>
+        <td>0.63%→0.00% <span class='rank-new'>NEW</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>3711</div><div class="cell-name">日月光投控</div></div></td>
+        <td><span class="action-inc">增 +300</span></td>
+        <td>1,400</td>
+        <td>-</td>
+        <td>1.15%→1.57% <span class='rank-up'>↑5</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>3037</div><div class="cell-name">欣興</div></div></td>
+        <td><span class="action-inc">增 +200</span></td>
+        <td>2,400</td>
+        <td>-</td>
+        <td>3.17%→3.62% <span class='rank-up'>↑3</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>2327</div><div class="cell-name">國巨*</div></div></td>
+        <td><span class="action-inc">增 +200</span></td>
+        <td>2,400</td>
+        <td>-</td>
+        <td>3.27%→3.27% <span class='rank-flat'>—</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>6981 JP</div><div class="cell-name">MURATA MANUFACTURING CO LTD</div></div></td>
+        <td><span class="action-inc">增 +184</span></td>
+        <td>1,250</td>
+        <td>-</td>
+        <td>3.18%→3.75% <span class='rank-up'>↑3</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>6871 JP</div><div class="cell-name">MICRONICS JAPAN CO LTD</div></div></td>
+        <td><span class="action-inc">增 +160</span></td>
+        <td>300</td>
+        <td>-</td>
+        <td>0.69%→1.64% <span class='rank-up'>↑12</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>2330</div><div class="cell-name">台積電</div></div></td>
+        <td><span class="action-inc">增 +70</span></td>
+        <td>620</td>
+        <td>-</td>
+        <td>2.27%→2.53% <span class='rank-down'>↓1</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>CRDO US</div><div class="cell-name">CREDO TECHNOLOGY GROUP HOLDI</div></div></td>
+        <td><span class="action-inc">增 +40</span></td>
+        <td>160</td>
+        <td>-</td>
+        <td>1.67%→2.04% <span class='rank-up'>↑4</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>8035 JP</div><div class="cell-name">TOKYO ELECTRON LTD</div></div></td>
+        <td><span class="action-inc">增 +22</span></td>
+        <td>110</td>
+        <td>-</td>
+        <td>1.96%→2.60% <span class='rank-up'>↑1</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>285A JP</div><div class="cell-name">KIOXIA HOLDINGS CORP</div></div></td>
+        <td><span class="action-inc">增 +20</span></td>
+        <td>225</td>
+        <td>-</td>
+        <td>4.87%→5.00% <span class='rank-flat'>—</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>AMAT US</div><div class="cell-name">APPLIED MATERIALS INC</div></div></td>
+        <td><span class="action-inc">增 +10</span></td>
+        <td>125</td>
+        <td>-</td>
+        <td>3.52%→3.86% <span class='rank-up'>↑2</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>SNDK US</div><div class="cell-name">SANDISK CORP</div></div></td>
+        <td><span class="action-inc">增 +3</span></td>
+        <td>48</td>
+        <td>-</td>
+        <td>4.17%→4.32% <span class='rank-flat'>—</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-blue"></span>VSH US</div><div class="cell-name">VISHAY INTERTECHNOLOGY INC</div></div></td>
+        <td><span class="action-dec">減 -250</span></td>
+        <td>250</td>
+        <td>-</td>
+        <td>1.13%→0.56% <span class='rank-down'>↓7</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-blue"></span>000660 KS</div><div class="cell-name">SK HYNIX INC</div></div></td>
+        <td><span class="action-dec">減 -10</span></td>
+        <td>10</td>
+        <td>-</td>
+        <td>1.45%→0.65% <span class='rank-down'>↓7</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="etf-card">
+  <div class="etf-header">
+    <span class="etf-badge">00990A</span>
+    <span class="etf-name">元大全球AI新經濟</span>
+  </div>
+  <div class="etf-summary">資料日期：115/07/13　新增 3　刪除 2　增碼 5　減碼 2</div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>股票</th>
+        <th>買賣超(張)</th>
+        <th>持股(張)</th>
+        <th>收盤價</th>
+        <th>比重%</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-green"></span>DELL US</div><div class="cell-name">DELL TECHNOLOGIES -C</div></div></td>
+        <td><span class="action-added">新增 +60</span></td>
+        <td>60</td>
+        <td>-</td>
+        <td>1.99% <span class='rank-new'>NEW</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-green"></span>ANET US</div><div class="cell-name">ARISTA NETWORKS INC</div></div></td>
+        <td><span class="action-added">新增 +124</span></td>
+        <td>124</td>
+        <td>-</td>
+        <td>1.72% <span class='rank-new'>NEW</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-green"></span>NVDA US</div><div class="cell-name">NVIDIA CORP</div></div></td>
+        <td><span class="action-added">新增 +98</span></td>
+        <td>98</td>
+        <td>-</td>
+        <td>1.53% <span class='rank-new'>NEW</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-gray"></span>COHR US</div><div class="cell-name">COHERENT CORP</div></div></td>
+        <td><span class="action-removed">刪除 -47</span></td>
+        <td>47</td>
+        <td>-</td>
+        <td>1.13%→0.00% <span class='rank-new'>NEW</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-gray"></span>INTC US</div><div class="cell-name">INTEL CORP</div></div></td>
+        <td><span class="action-removed">刪除 -98</span></td>
+        <td>98</td>
+        <td>-</td>
+        <td>0.82%→0.00% <span class='rank-new'>NEW</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>3711</div><div class="cell-name">日月光投控</div></div></td>
+        <td><span class="action-inc">增 +186</span></td>
+        <td>641</td>
+        <td>-</td>
+        <td>0.67%→1.02% <span class='rank-up'>↑6</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>PENG US</div><div class="cell-name">PENGUIN SOLUTIONS INC</div></div></td>
+        <td><span class="action-inc">增 +84</span></td>
+        <td>250</td>
+        <td>-</td>
+        <td>0.99%→1.48% <span class='rank-up'>↑4</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>UCTT US</div><div class="cell-name">ULTRA CLEAN HOLDINGS INC</div></div></td>
+        <td><span class="action-inc">增 +17</span></td>
+        <td>133</td>
+        <td>-</td>
+        <td>0.89%→1.00% <span class='rank-down'>↓2</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>LITE US</div><div class="cell-name">LUMENTUM HOLDINGS INC</div></div></td>
+        <td><span class="action-inc">增 +9</span></td>
+        <td>60</td>
+        <td>-</td>
+        <td>2.75%→3.57% <span class='rank-up'>↑3</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-red"></span>ONTO US</div><div class="cell-name">ONTO INNOVATION INC</div></div></td>
+        <td><span class="action-inc">增 +6</span></td>
+        <td>51</td>
+        <td>-</td>
+        <td>0.98%→1.19% <span class='rank-up'>↑1</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-blue"></span>MU US</div><div class="cell-name">MICRON TECHNOLOGY INC</div></div></td>
+        <td><span class="action-dec">減 -8</span></td>
+        <td>65</td>
+        <td>-</td>
+        <td>5.20%→4.68% <span class='rank-flat'>—</span></td>
+      </tr>
+      <tr>
+        <td><div class="cell-stock"><div class="cell-code"><span class="dot dot-blue"></span>SNDK US</div><div class="cell-name">SANDISK CORP</div></div></td>
+        <td><span class="action-dec">減 -4</span></td>
+        <td>36</td>
+        <td>-</td>
+        <td>5.21%→4.65% <span class='rank-down'>↓2</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="footer">
+  資料僅供參考，不構成投資建議<br>
+  產生時間：2026/07/14 17:10
+</div>
+
+</body>
+</html>
